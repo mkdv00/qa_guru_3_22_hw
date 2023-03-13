@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 from framework.demo_qa import DemoQaWithEnv
 from selene.support.shared import browser
 
-browser.config.base_url = "https://demowebshop.tricentis.com"
-
 load_dotenv()
 
 
@@ -16,26 +14,32 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
-def demoshop(request):
-    env = request.config.getoption("--env")
+def env(request):
+    return request.config.getoption("--env")
+
+
+@pytest.fixture(scope='session')
+def demoshop(env):
     return DemoQaWithEnv(env)
 
 
 @pytest.fixture(scope='session')
-def reqres(request):
-    env = request.config.getoption("--env")
+def reqres(env):
     return DemoQaWithEnv(env).reqres
 
 
-@pytest.fixture(scope='function')
-def auth_browser(demoshop):
+@pytest.fixture(scope='session')
+def login_wia_api(demoshop):
+    browser.config.base_url = os.getenv("PROD_DEMOQA")
     response = demoshop.login(os.getenv("LOGIN"), os.getenv("PASSWORD"))
     authorization_cookie = response.cookies.get("NOPCOMMERCE.AUTH")
+    return authorization_cookie
 
-    with allure.step("Check code"):
-        response.status_code = 302
 
+@pytest.fixture(scope='function')
+def browser_open(login_wia_api):
     browser.open("/Themes/DefaultClean/Content/images/logo.png")
+    print(f"Cookie: {login_wia_api}")
+    browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": login_wia_api})
 
-    browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": authorization_cookie})
-    return browser
+    yield browser
