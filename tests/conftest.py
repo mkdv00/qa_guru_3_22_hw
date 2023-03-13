@@ -1,6 +1,5 @@
 import os
 
-import allure
 import pytest
 from dotenv import load_dotenv
 from framework.demo_qa import DemoQaWithEnv
@@ -36,10 +35,11 @@ def login_wia_api(demoshop):
     return authorization_cookie
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def browser_open(login_wia_api):
     browser.open("/Themes/DefaultClean/Content/images/logo.png")
-    print(f"Cookie: {login_wia_api}")
     browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": login_wia_api})
 
     yield browser
+
+    browser.quit()

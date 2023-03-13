@@ -9,14 +9,14 @@ load_dotenv()
 
 
 def test_login_with_api(browser_open):
-    browser.open("/")
+    browser.open("")
 
     with allure.step("Verify successful authorization"):
         browser.element(".account").should(have.text(os.getenv("LOGIN")))
 
 
 def test_search_negative_result(browser_open):
-    browser.open("/")
+    browser.open("")
 
     with allure.step("Negitive search"):
         browser.element('.search-box [value="Search store"]').click()
@@ -25,7 +25,7 @@ def test_search_negative_result(browser_open):
 
 
 def test_watch_profile(browser_open):
-    browser.open("/")
+    browser.open("")
 
     with allure.step("Check info in profile"):
         browser.element(".account").should(have.text(os.getenv('LOGIN'))).click()
@@ -36,7 +36,7 @@ def test_watch_profile(browser_open):
 
 
 def test_watch_page_change_password(browser_open):
-    browser.open("/")
+    browser.open("")
 
     with allure.step("Check text buttion in change password"):
         browser.element(".account").should(have.text(os.getenv('LOGIN'))).click()
@@ -47,7 +47,7 @@ def test_watch_page_change_password(browser_open):
 
 
 def test_logout(browser_open):
-    browser.open("/")
+    browser.open("")
 
     with allure.step("Check logout"):
         browser.element('.ico-logout').click()
