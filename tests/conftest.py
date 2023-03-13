@@ -28,17 +28,17 @@ def reqres(env):
 
 
 @pytest.fixture(scope='session')
-def login_wia_api(demoshop):
-    browser.config.base_url = os.getenv("PROD_DEMOQA")
+def get_auth_cookie(demoshop):
     response = demoshop.login(os.getenv("LOGIN"), os.getenv("PASSWORD"))
     authorization_cookie = response.cookies.get("NOPCOMMERCE.AUTH")
     return authorization_cookie
 
 
-@pytest.fixture(scope='module')
-def browser_open(login_wia_api):
+@pytest.fixture(scope='function')
+def browser_open(get_auth_cookie):
+    browser.config.base_url = os.getenv("PROD_DEMOQA")
     browser.open("/Themes/DefaultClean/Content/images/logo.png")
-    browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": login_wia_api})
+    browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": get_auth_cookie})
 
     yield browser
 
