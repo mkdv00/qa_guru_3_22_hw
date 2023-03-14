@@ -36,7 +36,7 @@ def get_auth_cookie(demoshop):
 
 @pytest.fixture(scope='function')
 def browser_open(get_auth_cookie):
-    browser.config.base_url = os.getenv("PROD_DEMOQA")
+    browser.config.base_url = os.getenv("PROD_DEMOWEBSHOP")
     browser.open("/Themes/DefaultClean/Content/images/logo.png")
     browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": get_auth_cookie})
 

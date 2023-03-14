@@ -4,12 +4,12 @@ from utils.base_session import BaseSession
 
 class DemoQaWithEnv:
     def __init__(self, env):
-        self.demoqa = BaseSession(url=Hosts(env).demoqa)
+        self.demo_web_shop = BaseSession(url=Hosts(env).demo_web_shop)
         self.reqres = BaseSession(url=Hosts(env).reqres)
         self._authorization_cookie = None
 
     def login(self, email, password):
-        return self.demoqa.post(
+        return self.demo_web_shop.post(
             url="/login",
             params={'Email': email, 'Password': password},
             headers={'content-type': "application/x-www-form-urlencoded; charset=UTF-8"},
